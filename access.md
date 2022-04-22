@@ -4,7 +4,6 @@
 ---
 **基础的权限控制合约**
 #### 0. 继承&依赖
-**Context, IAccessControl, ERC165 & Strings**
 ##### a. IAccessControl.sol:
 ```solidity
 interface IAccessControl {
@@ -122,7 +121,6 @@ function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {
 ---
 **可跨链的权限控制合约**
 #### 0. 继承&依赖
-**AccessControl, CrossChainEnabled**
 ##### a. [AccessControl](#0x00-accesscontrolsol)
 ##### b. [CrossChainEnabled](crosschain.md)
 
@@ -153,7 +151,6 @@ function _crossChainRoleAlias(bytes32 role) internal pure virtual returns (bytes
 ---
 **可枚举的权限控制合约**
 #### 0. 继承&依赖
-**IAccessControlEnumerable, AccessControl & EnumerableSet**
 ##### a. IAccessControlEnumerable.sol
 ```solidity
 interface IAccessControlEnumerable is IAccessControl {
@@ -202,7 +199,6 @@ function _revokeRole(bytes32 role, address account) internal virtual override {
 ---
 **所有权合约**
 #### 0. 继承&依赖
-**Context**
 ##### a. [Context](utils.md)
 
 #### 1. 全局变量
