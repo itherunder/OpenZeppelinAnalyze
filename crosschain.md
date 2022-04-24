@@ -1,7 +1,8 @@
 ## 跨链合约
 **用于实现跨链的合约样例。**
 ### 0x00 CrossChainEnabled.sol
-该合约为虚合约，类似于`C++`中的抽象类，因此仅包含函数声明，不包含实现
+---
+**该合约为虚合约，类似于`C++`中的抽象类，因此仅包含函数声明，不包含实现**
 #### 0. 继承&依赖
 ##### a. [errors](#0x01-errorssol)
 
@@ -26,11 +27,14 @@ function _crossChainSender() internal view virtual returns (address);
 ```
 
 ### 0x01 errors.sol
-该合约仅声明了两个[自定义异常](https://blog.soliditylang.org/2021/04/21/custom-errors/)，需要编译器版本在`V0.8.4`以上
+---
+**该合约仅声明了两个[自定义异常](https://blog.soliditylang.org/2021/04/21/custom-errors/)，需要编译器版本在`V0.8.4`以上**
+#### 0. 异常声明
 ```solidity
 error NotCrossChainCall();
 error InvalidCrossChainSender(address actual, address expected);
 ```
+
 #### 1. testing
 经过对下面这个合约的测试（注释另一个函数后部署调用测得执行合约所花费的gas），确实自定义`error`的方式会便宜些
 ```solidity

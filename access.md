@@ -17,7 +17,7 @@ interface IAccessControl {
     function renounceRole(bytes32 role, address account) external;
 }
 ```
-##### b. [Context, Strings](utils.md), [ERC165](utils_introspection.md)
+##### b. [Context, Strings](./utils.md), [ERC165](./utils_introspection.md)
 
 #### 1. 全局变量
 ```solidity
@@ -122,7 +122,7 @@ function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {
 **可跨链的权限控制合约**
 #### 0. 继承&依赖
 ##### a. [AccessControl](#0x00-accesscontrolsol)
-##### b. [CrossChainEnabled](crosschain.md)
+##### b. [CrossChainEnabled](./crosschain.md)
 
 #### 1. 全局变量
 ```solidity
@@ -159,7 +159,7 @@ interface IAccessControlEnumerable is IAccessControl {
 }
 ```
 ##### b. [AccessControl](#0x00-accesscontrolsol)
-##### c. [EnumerableSet](utils_structs.md)
+##### c. [EnumerableSet](./utils_structs.md)
 
 #### 1. 全局变量
 ```solidity
@@ -199,7 +199,7 @@ function _revokeRole(bytes32 role, address account) internal virtual override {
 ---
 **所有权合约**
 #### 0. 继承&依赖
-##### a. [Context](utils.md)
+##### a. [Context](./utils.md)
 
 #### 1. 全局变量
 ```solidity
