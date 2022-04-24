@@ -31,3 +31,23 @@ function _crossChainSender() internal view virtual returns (address);
 error NotCrossChainCall();
 error InvalidCrossChainSender(address actual, address expected);
 ```
+#### 1. testing
+经过对下面这个合约的测试（注释另一个函数后部署调用测得执行合约所花费的gas），确实自定义`error`的方式会便宜些
+```solidity
+pragma solidity ^0.8.4;
+
+error SoSmall();
+
+contract C {
+    function T(uint x) public returns(uint) { // 21530
+        require(x > 10, "SoSmall");
+        return x * 10;
+    }
+    function T(uint x) public returns(uint) { // 21470
+        if (x <= 10) {
+            revert SoSmall();
+        }
+        return x * 10;
+    }
+}
+```
