@@ -348,7 +348,32 @@ struct Counter {
 
 #### 1. 函数
 ```solidity
+// 计数器当前值
 function current(Counter storage counter) internal view returns (uint256) {
     return counter._value;
+}
+
+// 计数器加1
+function increment(Counter storage counter) internal {
+    // 这个unchecked 是0.8.0 之后的新特性
+    // https://docs.soliditylang.org/en/v0.8.0/control-structures.html#checked-or-unchecked-arithmetic
+    // 由于0.8.0 后overflow 会直接revert，但有时候我们想要溢出的话，可以使用unchecked，这样这个块里面的溢出就不会revert了
+    unchecked {
+        counter._value += 1;
+    }
+}
+
+// 计数器减1
+function decrement(Counter storage counter) internal {
+    uint256 value = counter._value;
+    require(value > 0, "Counter: decrement overflow");
+    unchecked {
+        counter._value = value - 1;
+    }
+}
+
+// 重置计数器
+function reset(Counter storage counter) internal {
+    counter._value = 0;
 }
 ```
