@@ -316,3 +316,39 @@ function push(
     return push(self, op(latest(self), delta));
 }
 ```
+
+### 0x04 Context.sol
+---
+**提供当前执行的上下文环境的合约，虚合约，没有依赖**
+
+#### 0. 函数
+```solidity
+// 获取当前执行环境的合约调用者
+function _msgSender() internal view virtual returns (address) {
+    return msg.sender;
+}
+
+// 获取当前执行环境的携带的数据
+function _msgData() internal view virtual returns (bytes calldata) {
+    return msg.data;
+}
+```
+
+### 0x05. Counters.sol
+---
+**计数器库合约，没有依赖**
+
+#### 0. 结构体
+```solidity
+// 计数器结构体，就一个_value属性，uint256
+struct Counter {
+    uint256 _value; // default: 0
+}
+```
+
+#### 1. 函数
+```solidity
+function current(Counter storage counter) internal view returns (uint256) {
+    return counter._value;
+}
+```
