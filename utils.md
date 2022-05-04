@@ -377,3 +377,45 @@ function reset(Counter storage counter) internal {
     counter._value = 0;
 }
 ```
+
+### 0x06. Create2.sol
+---
+**用于创建合约的库，无任何依赖**
+
+#### 0. 函数
+```solidity
+// 使用create2 创建一个合约
+function deploy(
+    uint256 amount,
+    bytes32 salt,
+    bytes memory bytecode
+) internal returns (address) {
+    address addr;
+    require(address(this).balance >= amount, "Create2: insufficient balance");
+    require(bytecode.length != 0, "Create2: bytecode length is zero");
+    assembly {
+        // `amount`: 初始发送的金额，`salt`: 加盐，`bytecode`: 合约的字节码，`add(bytecode, 0x20)`: 合约的字节码的起始内存位置，`mload(bytecode)`: 合约的字节码的长度
+        addr := create2(amount, add(bytecode, 0x20), mload(bytecode), salt)
+    }
+    require(addr != address(0), "Create2: Failed on deploy");
+    return addr;
+}
+
+// 计算地址
+function computeAddress(
+    bytes32 salt,
+    bytes32 bytecodeHash,
+    address deployer
+) internal pure returns (address) {
+    // create2 生成合约地址的计算规则
+    bytes32 _data = keccak256(abi.encodePacked(bytes1(0xff), deployer, salt, bytecodeHash));
+    return address(uint160(uint256(_data)));
+}
+```
+
+#### 1. `create`和`create2`的区别
+- 生成合约地址的规则不同
+  - `create(val, ost, len)`: `keccak256(rlp([address(this), this.nonce]))[12:]`
+  - `create2(val, ost, len, salt)`: `keccak256(0xff ++ address(this) ++ salt ++ keccak256(mem[ost:ost+len]))[12:]`
+- 前者是可预测的（生成地址的参数中所有均是可知的），后者在加上salt后是不可预测的
+
