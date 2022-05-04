@@ -418,4 +418,46 @@ function computeAddress(
   - `create(val, ost, len)`: `keccak256(rlp([address(this), this.nonce]))[12:]`
   - `create2(val, ost, len, salt)`: `keccak256(0xff ++ address(this) ++ salt ++ keccak256(mem[ost:ost+len]))[12:]`
 - 前者是可预测的（生成地址的参数中所有均是可知的），后者在加上salt后是不可预测的
+[ref0](https://ethereum.org/en/developers/docs/evm/opcodes/), [ref1](https://ethereum.stackexchange.com/questions/101336/what-is-the-benefit-of-using-create2-to-create-a-smart-contract)
 
+### 0x07. Multicall.sol
+---
+**一次外部调用中调用合约的多个其他函数**
+
+#### 0. 依赖
+##### a. [Address](#0x00-addresssol)
+
+#### 1. 函数
+```solidity
+// 虽然是抽象合约，但是实现了这个多调用函数，子合约可以`override`该函数以实现自己的功能
+function multicall(bytes[] calldata data) external virtual returns (bytes[] memory results) {
+    results = new bytes[](data.length);
+    for (uint256 i = 0; i < data.length; i++) {
+        // 这里是直接调用自己，也可以调用其他地址
+        results[i] = Address.functionDelegateCall(address(this), data[i]);
+    }
+    return results;
+}
+```
+
+#### 2. 抽象合约和虚函数
+- 如下有两个合约`a`，`b`以及`c`，其中`a`是抽象合约，`b`和`c`是其子合约，其中`c`也是抽象合约
+- 当`a`合约中**存在未实现函数**时：
+  - `a`无法被实例化，即**无法部署**（均实现时可以部署）
+  - `b`必须实现`a`中未实现的函数，`c`同样作为**抽象合约**可以不实现`a`中的函数
+  - `a`中未实现的函数**必须**声明为`virtual`
+- `b`中重写的函数**必须**声明为`override`
+
+```solidity
+abstract contract a {
+    function f() public returns(uint256) { return 5; }
+    function f1() virtual public returns(uint256);
+}
+
+contract b is a {
+    function f1() override public returns(uint256) { return 6; }
+}
+
+abstract contract c is a {
+}
+```
