@@ -334,7 +334,7 @@ function _msgData() internal view virtual returns (bytes calldata) {
 }
 ```
 
-### 0x05. Counters.sol
+### 0x05 Counters.sol
 ---
 **计数器库合约，没有依赖**
 
@@ -378,7 +378,7 @@ function reset(Counter storage counter) internal {
 }
 ```
 
-### 0x06. Create2.sol
+### 0x06 Create2.sol
 ---
 **用于创建合约的库，无任何依赖**
 
@@ -420,7 +420,7 @@ function computeAddress(
 - 前者是可预测的（生成地址的参数中所有均是可知的），后者在加上salt后是不可预测的
 [ref0](https://ethereum.org/en/developers/docs/evm/opcodes/), [ref1](https://ethereum.stackexchange.com/questions/101336/what-is-the-benefit-of-using-create2-to-create-a-smart-contract)
 
-### 0x07. Multicall.sol
+### 0x07 Multicall.sol
 ---
 **一次外部调用中调用合约的多个其他函数**
 
@@ -461,3 +461,28 @@ contract b is a {
 abstract contract c is a {
 }
 ```
+
+### 0x08 StorageSlot.sol
+---
+**存储槽库合约，无依赖**
+
+#### 0. 结构体
+```solidity
+// 显而易见的结构体们
+struct AddressSlot {
+    address value;
+}
+
+struct BooleanSlot {
+    bool value;
+}
+
+struct Bytes32Slot {
+    bytes32 value;
+}
+
+struct Uint256Slot {
+    uint256 value;
+}
+```
+
