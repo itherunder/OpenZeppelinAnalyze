@@ -486,3 +486,107 @@ struct Uint256Slot {
 }
 ```
 
+#### 1. 函数
+```solidity
+// storage 变量的slot 表示该变量所存储的位置
+function getAddressSlot(bytes32 slot) internal pure returns (AddressSlot storage r) {
+    assembly {
+        // 去除存储在slot 位置上的address 变量
+        r.slot := slot
+    }
+}
+
+// 同上
+function getBooleanSlot(bytes32 slot) internal pure returns (BooleanSlot storage r) {
+    assembly {
+        r.slot := slot
+    }
+}
+
+// 同上
+function getBytes32Slot(bytes32 slot) internal pure returns (Bytes32Slot storage r) {
+    assembly {
+        r.slot := slot
+    }
+}
+
+// 同上
+function getUint256Slot(bytes32 slot) internal pure returns (Uint256Slot storage r) {
+    assembly {
+        r.slot := slot
+    }
+}
+```
+
+### 0x09 Strings.sol
+---
+**处理字符串的库，无依赖**
+
+#### 0. 全局变量
+```solidity
+// 十六进制的bytes16 字符串
+bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
+```
+
+#### 1. 函数
+```solidity
+// 将256位非负整数转换为字符串
+function toString(uint256 value) internal pure returns (string memory) {
+    // Inspired by OraclizeAPI's implementation - MIT licence
+    // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+    if (value == 0) {
+        return "0";
+    }
+    // 获取value的位数
+    uint256 temp = value;
+    uint256 digits;
+    while (temp != 0) {
+        digits++;
+        temp /= 10;
+    }
+
+    // 创建buffer 字节数组
+    bytes memory buffer = new bytes(digits);
+    while (value != 0) {
+        digits -= 1;
+        // 将value的最后一位存入buffer，48是'0'的ASCII码
+        buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+        value /= 10;
+    }
+    // 返回string
+    return string(buffer);
+}
+
+// 将`256`位非负整数转换为十六进制字符串
+function toHexString(uint256 value) internal pure returns (string memory) {
+    if (value == 0) {
+        return "0x00";
+    }
+    // 获取最少可用于表示`value`的字节数（十六进制字符串中两个字符为一个字节）
+    uint256 temp = value;
+    uint256 length = 0;
+    while (temp != 0) {
+        length++;
+        temp >>= 8;
+    }
+    // 调用子函数
+    return toHexString(value, length);
+}
+// 用`length`个字节（`length * 2`长度的字符串表示`256`位无符号整数`value`）
+function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {
+    // +2 表示"0x"
+    bytes memory buffer = new bytes(2 * length + 2);
+    buffer[0] = "0";
+    buffer[1] = "x";
+    // 从后往前将`value`的后`4`位写入字节数组`buffer`中
+    for (uint256 i = 2 * length + 1; i > 1; --i) {
+        // 将`_HEX_SYMBOLS`的第`value & 0xf`个字符写入到`buffer[i]`中
+        buffer[i] = _HEX_SYMBOLS[value & 0xf];
+        value >>= 4; // `value`右移半个字节
+    }
+    // 不可能产生这种情况吧?
+    require(value == 0, "Strings: hex length insufficient");
+    return string(buffer);
+}
+```
